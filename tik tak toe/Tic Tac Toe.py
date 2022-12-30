@@ -147,7 +147,7 @@ while True:
     print(f'Счет этой сессии игр: {users[0]} {score_user[0]} : {score_user[1]} {users[1]}')
     while True:
         new_game = input(f'Хотите сыграть еще раз? (y/n): ')
-        if new_game in ['y', 'n']:
+        if new_game in ['n', 'y']:
             break
         else:
             print('Ошибка ввода, попробуйте еще раз.')
