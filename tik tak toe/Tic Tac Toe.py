@@ -77,17 +77,13 @@ def numbers_of_players():
     while True:
         number_of_players = input('Сколько человек будут играть? (1 или 2): ')
         if number_of_players.isdigit() and 1 <= int(number_of_players) <= 2:
-            return int(number_of_players)
+            if int(number_of_players) == 2:
+                return [input('Введите имя первого игрока: '), input('Введите имя второго игрока: ')],\
+                       int(number_of_players)
+            else:
+                return [input('Введите имя игрока: '), 'computer'], int(number_of_players)
         else:
             print('Введено некорректное значение, попробуем снова.')
-
-
-# Создание базы игроков
-def users(number):
-    if number == 2:
-        return [input('Введите имя первого игрока: '), input('Введите имя второго игрока: ')]
-    else:
-        return [input('Введите имя игрока: '), 'computer']
 
 
 # Размер игрового поля
@@ -101,7 +97,7 @@ def size_xo():
 
 
 size = size_xo()
-users = users(numbers_of_players())
+users, players = numbers_of_players()
 token = {users[0]: 'x', users[1]: 'o'}
 users_move = None  # Переменная хранящая игрока, который сейчас ходит
 score_user = [0, 0]
@@ -125,7 +121,7 @@ while True:
         else:
             users_move = users[1]
         # Ход компьютера / игрока
-        if users_move == 'computer' == users[1]:
+        if users_move == 'computer' and players == 1:
             x, y = step_of_computer(xo)
             xo[x][y] = token[users_move]
             print(f'Ход игрока computer: {x} {y}')
