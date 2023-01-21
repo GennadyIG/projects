@@ -36,13 +36,13 @@ class InvalidValue(ExceptionGame):
 
 
 class Ship:
-    def __init__(self, len_ship, x, y, direction):
+    def __init__(self, len_ship: int, x: int, y: int, direction: int) -> None:
         self.len_ship = len_ship
         self.x = x
         self.y = y
         self.direction = direction
 
-    def dots(self):
+    def dots(self) -> list:  # Вычисление всех точек корабля
         if self.direction == 0:
             ship_dots = [[self.x - 1, self.y - 1 + u] for u in range(self.len_ship)]
             return ship_dots
@@ -52,12 +52,12 @@ class Ship:
 
 
 class Board:
-    def __init__(self):
+    def __init__(self) -> None:
         self.field = []
         self.ships = []
         self.busy = []
 
-    def add_ship(self, ship):
+    def add_ship(self, ship: Ship) -> bool:  # Добавление корабля в список и на игровое поле
         ship_dots = ship.dots()
         for el in ship_dots:
             if el in self.busy or el[0] > 5 or el[1] > 5:
@@ -69,16 +69,16 @@ class Board:
             self.field[el[0]][el[1]] = chr(9617)
         return True
 
-    def contour(self, ship):
+    def contour(self, ship_dots: list) -> None:  # Контроль контура корабля
         contour = [[-1, 1], [0, 1], [1, 1],
                    [-1, 0], [1, 0],
                    [-1, -1], [0, -1], [1, -1]]
         for el in contour:
-            for dot in ship:
+            for dot in ship_dots:
                 if (x := [dot[0] + el[0], dot[1] + el[1]]) not in self.busy and 0 <= x[0] < 6 and 0 <= x[1] < 6:
                     self.busy.append(x)
 
-    def random_board(self):
+    def random_board(self) -> list:  # Автоматическая расстановка кораблей
         while True:
             self.field = [['-'] * 6 for _ in range(6)]
             self.ships = []
@@ -98,7 +98,7 @@ class Board:
                 self.busy = []
                 return self.field
 
-    def board_manual(self):
+    def board_manual(self) -> list:  # Ручная расстановка кораблей
         while True:
             print('\nКоординаты первой палубы указываются через пробел в формате "х у",\n'
                   'корабль строится от этой точки вправо (для горизонтального направления необходимо указать 0)\n'
@@ -148,13 +148,13 @@ class Board:
 
 
 class Player:
-    def __init__(self, name=None):
+    def __init__(self, name=None) -> None:
         self.board = Board()
         self.name = name
         self.shot = []
         self.board_to_print = [['-'] * 6 for _ in range(6)]
 
-    def move(self, other):
+    def move(self, other) -> bool:  # Обработка выстрела и удаления подбитых точек из списка кораблей противника
         for ship in range(len(other.board.ships)):
             if self.shot in other.board.ships[ship]:
                 other.board.busy.append(self.shot)
@@ -174,11 +174,11 @@ class Player:
 
 
 class AI(Player):
-    def __init__(self, name):
+    def __init__(self, name) -> None:
         super().__init__(name)
         self.board_pl = self.board.random_board()
 
-    def ask(self, other):
+    def ask(self, other) -> list:  # Запрос координат выстрела компьютера
         while True:
             try:
                 self.shot = [randint(0, 5), randint(0, 5)]
@@ -191,14 +191,14 @@ class AI(Player):
 
 
 class User(Player):
-    def __init__(self, name, manual_filling: bool):
+    def __init__(self, name, manual_filling: bool) -> None:
         super().__init__(name)
         if manual_filling:
             self.board_pl = self.board.board_manual()
         else:
             self.board_pl = self.board.random_board()
 
-    def ask(self, other):
+    def ask(self, other) -> list:  # Запрос координат выстрела игрока
         while True:
             try:
                 dot = input('Введите координаты выстрела: ').split()
@@ -218,12 +218,12 @@ class User(Player):
         return self.shot
 
 
-class Draw:
-    def __init__(self, player, computer):
+class Draw:  # Класс отвечает за отрисовку игровых полей
+    def __init__(self, player, computer) -> None:
         self.player = player
         self.computer = computer
 
-    def print(self):
+    def print(self) -> None:
         print('  ', *list(range(1, 7)), ' \t\t  ', *list(range(1, 7)), ' ', sep=' | ')
         for number, row in enumerate(list(zip(self.player, self.computer)), start=1):
             for i in row:
