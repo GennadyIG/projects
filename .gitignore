@@ -127,3 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+.idea/.name
+*.xml
+*.iml
+Shooting_console/shooting.py
+tik tak toe/.idea/.name
