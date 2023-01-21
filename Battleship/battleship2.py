@@ -237,9 +237,9 @@ class Game:
               f'"-" - неиспользованная ячейка\n"{chr(9617)}" - целая палуба корабля\n'
               f'"{chr(9609)}" - подбитая палуба корабля\n"{chr(9642)}" - промах\n\n'
               f'Координаты выстрела вводятся через пробел в формате "х у"\nУдачи в игре!\n')
+        computer = AI('Computer')
         manual = bool(input('Как будем расставлять корабли?\n'
                             '(для автозаполнения ничего вводить не нужно, иначе любую букву): '))
-        computer = AI('Computer')
         player = User(input('Назовите свое имя: '), manual)
         game_board = Draw(player.board_pl, computer.board_to_print)
         game_board.print()
@@ -253,11 +253,11 @@ class Game:
                 other_user = player
             print(f'Ход игрока {current_user.name}')
             print(f'Выстрел по координатам {list(map(lambda x: int(x) + 1, current_user.ask(other_user)))}')
-            if not current_user.move(other_user):
+            if current_user.move(other_user):
+                print(f'Попадание! Игрок {current_user.name} стреляет еще раз.')
+            else:
                 count += 1
                 print(f'Мимо! Ход переходит к игроку {other_user.name}.')
-            else:
-                print(f'Попадание! Игрок {current_user.name} стреляет еще раз.')
             game_board.print()
 
 
