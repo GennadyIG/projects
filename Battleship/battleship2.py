@@ -94,8 +94,9 @@ class Board:
                         break
                 else:
                     break
-            self.busy = []
-            return self.field
+            else:
+                self.busy = []
+                return self.field
 
     def board_manual(self):
         while True:
@@ -106,8 +107,8 @@ class Board:
             self.ships = []
             self.busy = []
             len_ships = [3, 2, 2, 1, 1, 1, 1]
+            Draw(self.field, Player().board_to_print).print()
             for i in range(len(len_ships)):
-                Draw(self.field, Player().board_to_print).print()
                 print(f'Корабль, который предстоит расположить состоит из {len_ships[i]} палуб(ы)')
                 while True:
                     try:
@@ -136,6 +137,7 @@ class Board:
                         break
                     else:
                         print('Корабли не должны соприкасаться или выходить за пределы доски')
+                Draw(self.field, Player().board_to_print).print()
                 reset = input('Если необходимо сбросить расстановку введите любую букву,'
                               'если нет, то оставьте пустым или введите "0": ')
                 if reset:
