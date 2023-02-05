@@ -9,4 +9,5 @@ ____
 ![image](https://user-images.githubusercontent.com/120253513/216831482-78126f65-e7f0-4767-b4ae-806bfcde6418.png)
 
 Если в запросе ошибка, то выводится сообщение об этом
+
 ![image](https://user-images.githubusercontent.com/120253513/216831664-d5691a52-4de6-4590-9902-1938990d37e9.png) 
