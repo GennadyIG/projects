@@ -12,10 +12,11 @@ def hello(message):
                                       f'например для конвертации 100 евро в рубли необходимо ввести в чат:\n'
                                       f' "eur rub 100".\nВот некоторые валюты:\nRUB: Российский рубль\nEUR: Евро\n'
                                       f'JPY: Японская йена\nCNY: Китайский юань\nUSD: Американский доллар\n'
-                                      f'TRY: Турецкая лира\nДля просмотра всех доступных валют введите команду "/all"')
+                                      f'TRY: Турецкая лира\n'
+                                      f'Для просмотра всех доступных валют введите команду "/values"')
 
 
-@bot.message_handler(commands=['all'])
+@bot.message_handler(commands=['values'])
 def all_currency(message):
     bot.send_message(message.chat.id, f'{Converter.print_currency()}')
 
