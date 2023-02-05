@@ -78,18 +78,18 @@ class Converter:
                           'ZMW': 'Замбийская квача', 'ZWL': 'Зимбабвийский доллар'}
     keys_of_available_currency = list(available_currency.keys())
 
-    def __init__(self, currency_from: str, currency_to: str, amount: str):
-        self.currency_to = currency_to
-        self.currency_from = currency_from
+    def __init__(self, base: str, quote: str, amount: str):
+        self.base = base
+        self.quote = quote
         self.amount = amount
 
     # Подготовка запроса конвертации
     def convert(self) -> str:
-        url = f"https://api.apilayer.com/fixer/convert?to={self.currency_to}&" \
-              f"from={self.currency_from}&amount={self.amount}"
+        url = f"https://api.apilayer.com/fixer/convert?to={self.base}&" \
+              f"from={self.quote}&amount={self.amount}"
         param = 'result'
-        return f'{self.amount} {self.currency_from.upper()} = ' \
-               f'{self.get_price(url, param):.2f} {self.currency_to.upper()}'
+        return f'{self.amount} {self.quote.upper()} = ' \
+               f'{self.get_price(url, param):.2f} {self.base.upper()}'
 
     @staticmethod  # Вывод доступных валют
     def print_currency() -> str:
@@ -122,15 +122,15 @@ class InputHandling:  # Обработка полученного сообщен
             return e
 
     # Проверка значений полученных аргументов
-    def data_validation(self, currency_from: str, currency_to: str, amount: str) -> str:
+    def data_validation(self, base: str, quote: str, amount: str) -> str:
         try:
-            if currency_from.upper() not in Converter.keys_of_available_currency or \
-                    currency_to.upper() not in Converter.keys_of_available_currency:
+            if base.upper() not in Converter.keys_of_available_currency or \
+                    quote.upper() not in Converter.keys_of_available_currency:
                 raise CurrencyNameError()
             float(amount)
         except APIException as e:
             return e
         except ValueError:
             return 'Введено неверное количество конвертируемой валюты'
-        self.convert = Converter(currency_from, currency_to, amount)
+        self.convert = Converter(base, quote, amount)
         return self.convert.convert()
