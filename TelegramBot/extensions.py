@@ -78,51 +78,21 @@ class Converter:
                           'ZMW': 'Замбийская квача', 'ZWL': 'Зимбабвийский доллар'}
     keys_of_available_currency = list(available_currency.keys())
 
-    def __init__(self, base: str, quote: str, amount: str):
-        self.base = base
-        self.quote = quote
-        self.amount = amount
-
-    # Подготовка запроса конвертации
-    def convert(self) -> str:
-        url = f"https://api.apilayer.com/fixer/convert?to={self.base}&" \
-              f"from={self.quote}&amount={self.amount}"
-        param = 'result'
-        return f'{self.amount} {self.quote.upper()} = ' \
-               f'{self.get_price(url, param):.2f} {self.base.upper()}'
-
-    @staticmethod  # Вывод доступных валют
-    def print_currency() -> str:
-        available_currency_str = ''
-        for key, value in Converter.available_currency.items():
-            available_currency_str += '\n' + f'{key}: {value}'
-        return available_currency_str
-
-    @staticmethod  # Получение и обработка ответа на запрос
-    def get_price(url: str, param: str) -> str:
-        response = requests.get(url, headers=headers)
-        result = json.loads(response.text)
-        return result[param]
-
-
-class InputHandling:  # Обработка полученного сообщения
-    def __init__(self, message):
-        self.message = message
-        self.convert = None
-
     # Проверка на количество введенных аргументов
-    def message_to_list(self) -> str:
+    @staticmethod
+    def message_to_list(message) -> str:
         try:
-            message_to_list = self.message.split()
+            message_to_list = message.split()
             if len(message_to_list) == 3:
-                return self.data_validation(*message_to_list)
+                return Converter.data_validation(*message_to_list)
             else:
                 raise InputError()
         except APIException as e:
             return e
 
     # Проверка значений полученных аргументов
-    def data_validation(self, base: str, quote: str, amount: str) -> str:
+    @staticmethod
+    def data_validation(base: str, quote: str, amount: str) -> str:
         try:
             if base.upper() not in Converter.keys_of_available_currency or \
                     quote.upper() not in Converter.keys_of_available_currency:
@@ -132,5 +102,21 @@ class InputHandling:  # Обработка полученного сообщен
             return e
         except ValueError:
             return 'Введено неверное количество конвертируемой валюты'
-        self.convert = Converter(base, quote, amount)
-        return self.convert.convert()
+        return Converter.get_price(base, quote, amount)
+
+    # Конвертация
+    @staticmethod
+    def get_price(base: str, quote: str, amount: str) -> str:
+        url = f"https://api.apilayer.com/fixer/convert?to={quote}&" \
+              f"from={base}&amount={amount}"
+        response = requests.get(url, headers=headers)
+        result = json.loads(response.text)
+        return f'{amount} {quote.upper()} = ' \
+               f'{result["result"]:.2f} {base.upper()}'
+
+    @staticmethod  # Вывод доступных валют
+    def print_currency() -> str:
+        available_currency_str = ''
+        for key, value in Converter.available_currency.items():
+            available_currency_str += '\n' + f'{key}: {value}'
+        return available_currency_str
