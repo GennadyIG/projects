@@ -1,5 +1,5 @@
 import telebot
-from bot_logic import *
+from extensions import *
 from config import TOKEN
 
 bot = telebot.TeleBot(TOKEN)
