@@ -23,8 +23,7 @@ def all_currency(message):
 
 @bot.message_handler(content_types=['text'])
 def function_convert(message):
-    teleuser = InputHandling(message.text)
-    convert = teleuser.message_to_list()
+    convert = Converter.message_to_list(message.text)
     bot.reply_to(message, f"{convert}")
 
 
